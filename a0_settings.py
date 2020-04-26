@@ -7,9 +7,9 @@ import os
 LIMIT_DAYS = 10
 
 # Constants control which transform of target to use
-USE_LOG = 0
+USE_LOG = 1
 USE_DIFF = 1
-USE_DIV = 0
+USE_DIV = 1
 
 # GPU usage for training
 USE_GPU = 1
@@ -29,10 +29,10 @@ USE_LATEST_DATA_COUNTRY = False
 USE_LATEST_DATA_RUS = True
 
 # Some feature control variables
-USE_YANDEX_MOBILITY_DATA = False
-USE_SIMPLE_LINEAR_FEATURES = False
-USE_INTERPOLATION_FEATURES = False
-USE_WEEKDAY_FEATURES = False
+USE_YANDEX_MOBILITY_DATA = True
+USE_SIMPLE_LINEAR_FEATURES = True
+USE_INTERPOLATION_FEATURES = True
+USE_WEEKDAY_FEATURES = True
 
 # All path variables
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
