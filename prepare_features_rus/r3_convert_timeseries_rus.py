@@ -162,7 +162,7 @@ def create_time_features_rus(plus_day, type):
     iso_names = get_russian_regions_names()
     s1 = pd.read_csv(FEATURES_PATH + 'time_table_flat_rus_regions_for_rus_{}.csv'.format(type))
     if USE_LATEST_DATA_RUS:
-        s2 = pd.read_csv(FEATURES_PATH + 'time_table_flat_latest_all_regions_for_rus_{}.csv'.format(type))
+        s2 = pd.read_csv(FEATURES_PATH + 'time_table_flat_for_rus_latest_{}.csv'.format(type))
         s1 = pd.concat((s1, s2), axis=0)
     # s3 = pd.read_csv(FEATURES_PATH + 'time_table_flat_for_rus_{}.csv'.format(type))
     # s4 = pd.read_csv(FEATURES_PATH + 'time_table_flat_us_for_rus_{}.csv'.format(type))
@@ -301,13 +301,13 @@ def convert_timeseries_all_regions_last_date():
 
 
 if __name__ == '__main__':
-    convert_timeseries_countries('confirmed')
-    convert_timeseries_countries('deaths')
-    convert_timeseries_us('confirmed')
-    convert_timeseries_us('deaths')
+    # convert_timeseries_countries('confirmed')
+    # convert_timeseries_countries('deaths')
+    # convert_timeseries_us('confirmed')
+    # convert_timeseries_us('deaths')
+    # convert_timeseries_all_regions_last_date()
     convert_timeseries_rus('confirmed')
     convert_timeseries_rus('deaths')
-    convert_timeseries_all_regions_last_date()
-    for i in range(0, DAYS_TO_PREDICT):
+    for i in range(0, DAYS_TO_PREDICT + 1):
         create_time_features_rus(i, 'confirmed')
         create_time_features_rus(i, 'deaths')

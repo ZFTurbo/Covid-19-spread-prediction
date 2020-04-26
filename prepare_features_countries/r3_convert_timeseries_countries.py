@@ -156,6 +156,6 @@ if __name__ == '__main__':
     convert_timeseries_last_date()
     convert_timeseries_confirmed('confirmed')
     convert_timeseries_confirmed('deaths')
-    for i in range(0, DAYS_TO_PREDICT):
+    for i in range(0, DAYS_TO_PREDICT + 1):
         create_time_features_confirmed(i, 'confirmed')
         create_time_features_confirmed(i, 'deaths')
