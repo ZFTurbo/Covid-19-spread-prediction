@@ -299,7 +299,7 @@ def read_input_data(day, type, step_back_days=None):
     train = add_area_and_density(train)
     test = add_area_and_density(test)
 
-    if 1:
+    if USE_YANDEX_MOBILITY_DATA:
         # Yandex mobility data
         # https://github.com/tyz910/sberbank-covid19/blob/master/data/mobility-yandex.csv
         yandex_mobility_path = INPUT_PATH + 'additional/mobility-yandex.csv'
@@ -324,18 +324,20 @@ def read_input_data(day, type, step_back_days=None):
     train = gen_additional_features(train)
     test = gen_additional_features(test)
 
-    if 1:
+    if USE_SIMPLE_LINEAR_FEATURES:
         train = gen_simple_linear_features(train, day, type)
         test = gen_simple_linear_features(test, day, type)
 
-    train = gen_interpolation_features(train, day, type)
-    test = gen_interpolation_features(test, day, type)
+    if USE_INTERPOLATION_FEATURES:
+        train = gen_interpolation_features(train, day, type)
+        test = gen_interpolation_features(test, day, type)
 
     train = add_special_additional_features(train)
     test = add_special_additional_features(test)
 
-    train = add_weekday(train, day)
-    test = add_weekday(test, day)
+    if USE_WEEKDAY_FEATURES:
+        train = add_weekday(train, day)
+        test = add_weekday(test, day)
 
     train = days_from_first_case(train, type)
     test = days_from_first_case(test, type)

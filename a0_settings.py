@@ -28,6 +28,12 @@ STEP_BACK = None
 USE_LATEST_DATA_COUNTRY = False
 USE_LATEST_DATA_RUS = True
 
+# Some feature control variables
+USE_YANDEX_MOBILITY_DATA = True
+USE_SIMPLE_LINEAR_FEATURES = True
+USE_INTERPOLATION_FEATURES = True
+USE_WEEKDAY_FEATURES = True
+
 # All path variables
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
 INPUT_PATH = ROOT_PATH + 'input/'

@@ -256,8 +256,9 @@ def read_input_data(day, type, step_back_days=None):
     train = gen_additional_features(train)
     test = gen_additional_features(test)
 
-    train = gen_interpolation_features(train, day, type)
-    test = gen_interpolation_features(test, day, type)
+    if USE_INTERPOLATION_FEATURES:
+        train = gen_interpolation_features(train, day, type)
+        test = gen_interpolation_features(test, day, type)
 
     train = add_country_features(train)
     test = add_country_features(test)
@@ -265,8 +266,9 @@ def read_input_data(day, type, step_back_days=None):
     train = add_special_additional_features(train)
     test = add_special_additional_features(test)
 
-    train = add_weekday(train, day)
-    test = add_weekday(test, day)
+    if USE_WEEKDAY_FEATURES:
+        train = add_weekday(train, day)
+        test = add_weekday(test, day)
 
     train = days_from_first_case(train, type)
     test = days_from_first_case(test, type)
