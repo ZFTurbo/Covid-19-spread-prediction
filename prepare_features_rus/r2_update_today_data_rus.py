@@ -15,39 +15,23 @@ def update_current_data():
     except:
         print('Already removed')
 
-    download_url('https://xn--80aesfpebagmfblc0a.xn--p1ai/', store_file1)
+    download_url('https://xn--80aesfpebagmfblc0a.xn--p1ai/information/', store_file1)
 
     html = open(store_file1, 'r', encoding='utf8').read()
-    search1 = '</svg></cv-map-virus><div class="d-map__list"><table><tr>'
-    search2 = '</table></div></div></cv-popup>'
+    search1 = '<cv-spread-overview :spread-data=\''
+    search2 = '\' region-data-url="'
     r1 = html.find(search1)
     r2 = html.find(search2)
     if r1 == -1 or r2 == -1:
         print('Parse file failed!')
         exit()
     part = html[r1+len(search1):r2]
-    part = part.split('<tr>')
+    data = json.loads(part)
 
     parsed_data = []
-    for p in part:
-        p = p.replace('</tr>', '')
-        p = p.split('<td>')
-        cleaned = []
-        for p1 in p:
-            p1 = p1.replace('<th>', '')
-            p1 = p1.replace('</th>', '')
-            p1 = p1.replace('</td>', '')
-            p1 = p1.replace('<span class="d-map__indicator d-map__indicator_sick"></span>', '')
-            p1 = p1.replace('<span class="d-map__indicator d-map__indicator_healed"></span>', '')
-            p1 = p1.replace('<span class="d-map__indicator d-map__indicator_die"></span>', '')
-            cleaned.append(p1)
-        if len(cleaned) != 4:
-            print('Incorrect length of list: {}'.format(cleaned))
-            exit()
-        for i in range(1, 4):
-            cleaned[i] = int(cleaned[i])
-        print(cleaned)
-        parsed_data.append(cleaned)
+    for d in data:
+        l = [d['title'], d['sick'], d['healed'], d['died']]
+        parsed_data.append(l)
 
     iso_names = get_russian_regions_names_v2()
     iso_names2 = get_russian_regions_names()
