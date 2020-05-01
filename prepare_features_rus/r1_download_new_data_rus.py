@@ -23,20 +23,6 @@ def update_current_data():
         print('Latest date available in {}: {}'.format(os.path.basename(store_file), s.columns.values[-1]))
 
 
-def update_yandex_metric():
-    store_file1 = INPUT_PATH + 'additional/mobility-yandex.csv'
-    try:
-        os.remove(store_file1)
-    except:
-        print('Already removed')
-
-    download_url('https://raw.githubusercontent.com/tyz910/sberbank-covid19/master/data/mobility-yandex.csv', store_file1)
-
-    for store_file in [store_file1]:
-        s = pd.read_csv(store_file)
-        print('Latest date available in {}: {}'.format(os.path.basename(store_file), sorted(s['date'].unique())[-1]))
-
-
 def check_data_noise(type):
     if type == 'confirmed':
         in_path = INPUT_PATH + 'time_series_covid19_confirmed_RU.csv'
@@ -84,8 +70,46 @@ def check_data_noise(type):
                 print(c, d, summary[(c, next)], summary[(c, prev)])
 
 
+def update_yandex_mobility():
+    import re
+    import json
+    import requests
+    import pandas as pd
+    from datetime import datetime
+
+    countries = pd.read_csv(INPUT_PATH + 'additional/countries_yandex.csv')
+    city_map = {row['region_center']: row['country'] for i, row in countries[countries['is_region'] == 1].iterrows()}
+
+    body = requests.get('https://yandex.ru/web-maps/covid19/isolation').content
+    data = json.loads(re.compile(r'class="config-view">(.+?)<').search(body.decode('utf-8'))[1])
+
+    def ts_to_date(ts):
+        return datetime.utcfromtimestamp(ts + 3 * 60 * 60).strftime('%Y-%m-%d')
+
+    result = []
+
+    for c in data['covidData']['cities']:
+        if c['name'] in city_map:
+            country = city_map[c['name']]
+            result.append(
+                pd.DataFrame(
+                    [[ts_to_date(r['ts']), country, r['value']] for r in c['histogramDays']],
+                    columns=['date', 'country', 'isolation'],
+                )
+            )
+
+    result = pd.concat(result).reset_index(drop=True)
+    store_file1 = INPUT_PATH + 'additional/mobility-yandex.csv'
+    result.to_csv(store_file1, index=False)
+    result.head()
+
+    for store_file in [store_file1]:
+        s = pd.read_csv(store_file)
+        print('Latest date available in {}: {}'.format(os.path.basename(store_file), sorted(s['date'].unique())[-1]))
+
+
 if __name__ == '__main__':
     update_current_data()
-    update_yandex_metric()
+    update_yandex_mobility()
     check_data_noise('confirmed')
     check_data_noise('deaths')
